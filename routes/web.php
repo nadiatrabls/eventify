@@ -3,16 +3,14 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\EventController;
-use App\Http\Controllers\Admin\ReservationController;
+use App\Http\Controllers\Admin\ReservationController as AdminReservationController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\User\ReservationController as UserReservationController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
 // Public Routes
-
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/', [\App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 // Auth Routes
 Route::get('/login', [\App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'create'])->name('login');
@@ -33,10 +31,10 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // User Reservations
-     // User Reservations
-     Route::get('/reservations', [\App\Http\Controllers\User\ReservationController::class, 'index'])->name('reservations.index');
-     Route::delete('/reservations/{reservation}', [\App\Http\Controllers\User\ReservationController::class, 'destroy'])->name('reservations.destroy');
+    // User Reservations Routes
+    Route::get('/reservations', [UserReservationController::class, 'index'])->name('reservations.index');
+    Route::post('/reservations', [UserReservationController::class, 'store'])->name('reservations.store');
+    Route::delete('/reservations/{reservation}', [UserReservationController::class, 'destroy'])->name('reservations.destroy');
 });
 
 // Admin Routes
@@ -53,8 +51,7 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     Route::resource('/events', EventController::class);
 
     // Reservations Routes
-    Route::get('/reservations', [ReservationController::class, 'index'])->name('admin.reservations.index');
+    Route::get('/reservations', [AdminReservationController::class, 'index'])->name('admin.reservations.index');
 });
 
 require __DIR__.'/auth.php';
-

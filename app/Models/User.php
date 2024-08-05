@@ -44,5 +44,10 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+        public function isAdmin()
+{
+    return $this->role === 'admin'; // Assurez-vous que 'role' est bien la colonne pour le rôle dans votre table 'users'
+}
+
     }
 

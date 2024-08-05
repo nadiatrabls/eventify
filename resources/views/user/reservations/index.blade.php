@@ -4,37 +4,32 @@
 
 @section('content')
 <div class="container">
-    <h1 class="my-4">My Reservations</h1>
-
-    @if($reservations->isEmpty())
-        <div class="alert alert-warning">You have no reservations.</div>
-    @else
-        <table class="table table-striped">
-            <thead>
+    <h1>My Reservations</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Event</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($reservations as $reservation)
                 <tr>
-                    <th>Event</th>
-                    <th>Date</th>
-                    <th>Location</th>
-                    <th>Action</th>
+                    <td>{{ $reservation->id }}</td>
+                    <td>{{ $reservation->event->title }}</td>
+                    <td>{{ $reservation->event->date }}</td>
+                    <td>
+                        <form action="{{ route('reservations.destroy', $reservation->id) }}" method="POST" style="display:inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger">Cancel</button>
+                        </form>
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-                @foreach ($reservations as $reservation)
-                    <tr>
-                        <td>{{ $reservation->event->title }}</td>
-                        <td>{{ $reservation->event->date }}</td>
-                        <td>{{ $reservation->event->location }}</td>
-                        <td>
-                            <form action="{{ route('reservations.destroy', $reservation->id) }}" method="POST">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger">Cancel</button>
-                            </form>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    @endif
+            @endforeach
+        </tbody>
+    </table>
 </div>
 @endsection
